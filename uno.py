@@ -51,9 +51,6 @@ def color(C):           #convertir color de carta int->str
         case 0:
             color = ''
     return color
-#def fcarta(nu,co):       #formatar num y color de carta como str
-    carta = '[{}{}]'.format(simb(nu),color(co))
-    return carta
 fcarta = lambda nu,co:'[{}{}]'.format(simb(nu),color(co))
 
 #funciones internas del juego 
