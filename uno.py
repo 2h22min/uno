@@ -1,27 +1,34 @@
 import random
 import leereglas as r
+#import cartas as c
 print('{0:^40}'.format("UNO :)"))
 
 class jugador:
-    def __init__(self,msjempieza,msjturno,comnuevac):
+    def __init__(self,msjs):
         self.cartas = 0
         self.nums = []
         self.colrs = []
         self.pts = 0
         self.puntaje = []
-        self.empieza = msjempieza
-        self.turno = msjturno
-        self.nc = comnuevac
-us = jugador('Tú empiezas.','Tu turno.\n','Robaste una nueva carta')                      #usuario
-op = jugador('Empieza tu oponente.','Turno de tu oponente.\n','Tu oponente robó una nueva carta')  #oponente
+        self.empieza = msjs['empieza']
+        self.turno = msjs['turno']
+        self.nc = msjs['nuevacarta']
 
 ingame = True
-rondas = 0
 opcinicial = 0
-mano = 2
 separ = '\n----------------------------------------\n'
 uno = '¡UNO!'
 erroropc = 'Error: escribe el número correspondiente.'
+msjs_us = {
+    'empieza':'Tú empiezas.',
+    'turno':'Tu turno.\n',
+    'nuevacarta':'Robaste una nueva carta'
+}
+msjs_op = {
+    'empieza':'Empieza tu oponente.',
+    'turno':'Turno de tu oponente.\n',
+    'nuevacarta':'Tu oponente robó una nueva carta'
+}
 pc_accion = 'Como la primera carta volteada de la ronda es un'
 opciones = {
     0:'Nueva ronda (continuar)',
@@ -245,9 +252,9 @@ def mesa():
     tirar()
     miscartas()            
 def puntaje():
-    print('\nPuntaje:  ','{0:^6}'.format('Tú'),'{0:^15}'.format('Tu oponente'))
+    print('\nPuntaje:    ','{0:^6}'.format('Tú'),'{0:^15}'.format('Tu oponente'))
     for i in range(rondas):
-        print(f'Ronda {i+1}:  ','{0:^6}'.format(us.puntaje[i]),'{0:^15}'.format(op.puntaje[i]))
+        print('{0:<12}'.format(f'Ronda {i+1}:  '),'{0:^6}'.format(us.puntaje[i]),'{0:^15}'.format(op.puntaje[i]))
     
 #turnos
 def turnoop():                  #turno oponente
@@ -304,12 +311,17 @@ def turnous():                  #turno jugador
 
 while ingame:
     while opcinicial!=1 or opcinicial!=2 or opcinicial!=3:
-        print('Selecciona: ')
+        print('\nSelecciona: ')
         for i in range(3):
             print('{0:^40}'.format(f'{i+1}. {opciones[4-i]}'))
         opcinicial = int(input())
         match opcinicial:
             case 1:
+                rondas = 0
+                us = jugador(msjs_us)           #usuario
+                op = jugador(msjs_op)           #oponente
+                mano = 2
+                finforzado = False
                 while us.pts<500 and op.pts<500:
                     mnums, mcors = [], []      #listas del mazo principal
                     us.cartas, op.cartas = 0, 0      #cantidad de cartas del jugador y del oponente
@@ -417,7 +429,7 @@ while ingame:
                     rondas += 1
                     sumarpuntos()
 
-                    while True:
+                    while us.pts<500 and op.pts<500:
                         print('\nSelecciona: ')
                         for i in range(4):
                             print('{0:^40}'.format(f'{i}. {opciones[i]}'))
@@ -436,13 +448,25 @@ while ingame:
                                     print(f'Ganó tu oponente con {op.pts-us.pts} puntos de diferencia.')
                                 else:
                                     print('El juego acabó en un empate.')
-                                us.pts, op.pts = 500, 500
-                                ingame = False
+                                finforzado = True                                
                                 break
                             case 3:
                                 reglas()
                             case _:
                                 print(erroropc)
+                    if finforzado:
+                        del us, op
+                        break
+                if not finforzado:
+                    if us.pts>op.pts:
+                        print(f'\n¡Felicidades! Ganaste el juego con {us.pts-op.pts} puntos de diferencia.')
+                    else:
+                        print(f'\nHas perdido por {op.pts-us.pts} puntos de diferencia.')
+                    print('Así fueron los puntos durante la partida:\n')
+                    puntaje()
+                    print()
+                    del us, op
+                break
             case 2:
                 reglas()
             case 3:
