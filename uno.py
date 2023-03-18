@@ -3,7 +3,7 @@ import leereglas as r
 print('{0:^40}'.format("UNO :)"))
 
 class jugador:
-    def __init__(self,msjempieza,msjturno):
+    def __init__(self,msjempieza,msjturno,comnuevac):
         self.cartas = 0
         self.nums = []
         self.colrs = []
@@ -11,8 +11,9 @@ class jugador:
         self.puntaje = []
         self.empieza = msjempieza
         self.turno = msjturno
-us = jugador('Tú empiezas.','Tu turno.\n')                      #usuario
-op = jugador('Empieza tu oponente.','Turno de tu oponente.\n')  #oponente
+        self.nc = comnuevac
+us = jugador('Tú empiezas.','Tu turno.\n','Robaste una nueva carta')                      #usuario
+op = jugador('Empieza tu oponente.','Turno de tu oponente.\n','Tu oponente robó una nueva carta')  #oponente
 
 ingame = True
 rondas = 0
@@ -21,8 +22,6 @@ mano = 2
 separ = '\n----------------------------------------\n'
 uno = '¡UNO!'
 erroropc = 'Error: escribe el número correspondiente.'
-ncop = f'Tu oponente tomó una nueva carta y pasó su turno. Tu turno.\n'
-ncus = f'Tomaste una nueva carta y pasaste tu turno. Turno de tu oponente.\n'
 pc_accion = 'Como la primera carta volteada de la ronda es un'
 opciones = {
     0:'Nueva ronda (continuar)',
@@ -89,11 +88,11 @@ def pricartamesa():   #primera carta volteada del mazo en mesa
     else:
         cmesa.append(mnums.pop(cdelmazo))
         cmesa.append(mcors.pop(cdelmazo))
-def posibs(nums,colors):     #jugadas posibles como lista de i posibles
+def posibs(jug):     #jugadas posibles como lista de i posibles
     global poss
     poss = []
-    for i in range(0,len(nums)):
-        if nums[i]==cmesa[0] or colors[i]==cmesa[1] or colors[i]==0:
+    for i in range(0,len(jug.nums)):
+        if jug.nums[i]==cmesa[0] or jug.colrs[i]==cmesa[1] or jug.colrs[i]==0:
             poss.append(i)
 def jugada():          #actúa jugada del usuario y devuelve prox. carta en mesa
     global comentario
@@ -130,16 +129,32 @@ def jugada():          #actúa jugada del usuario y devuelve prox. carta en mesa
         comentario = op.turno
     else:
         us.cartas = nuevacarta(us)
-        comentario = ncus
+        comentario = f'{us.nc}. {op.turno}'
     return cmesa
 def oppjuega():        #juega el oponente "
     global comentario
+    global poss
+    global cmesa
     if len(poss)>0:
         op.cartas = cartavieja(op)
         if cmesa[1]==0: cmesa[1] = random.randint(1,4)
     else:
         op.cartas = nuevacarta(op)
-        comentario = ncop
+        comentario = op.nc
+        if op.nums[-1]==cmesa[0] or op.colrs[-1]==cmesa[1] or op.colrs[-1]==0:
+            poss = [len(op.nums)-1,1]
+            numjug = random.randrange(0,len(poss))
+            if numjug == 0:
+                comentario += f' y la descartó. {us.turno}'
+                n_c_jug = op.nums[poss[numjug]]
+                cmesa = oppjuega()
+                if n_c_jug==10 or n_c_jug==11 or n_c_jug==12 or n_c_jug==14:
+                    oppjuegadn()
+                    turnoop()
+            else:
+                comentario += f'. {us.turno}'
+        else:
+            comentario += f'. {us.turno}'
     return cmesa
 def juegadenuevo():     #si juega c. tipo 10, 11, 12 o 14 porque cancelan el siguiente turno del oponente
     global comentario
@@ -219,11 +234,11 @@ def miscartas():          #imprimir cartas del jugador
     if us.cartas==1: c_us += f'{uno}'
     print('{0:^40}'.format(c_us),separ,sep='\n')
 def misposibs():   #mostrar posbs al jugador con la lista de index jugables
-    posibs(us.nums,us.colrs)
+    posibs(us)
     print('Estas son tus cartas que puedes jugar:')
     for i in range(0,len(poss)):
         print(f'{i}.',fcarta(us.nums[poss[i]],us.colrs[poss[i]]),end=' ')
-    print(f'\nEscógela escribiendo el número correspondiente, o "{len(poss)}" para tomar una nueva carta y pasar esta ronda.')
+    print(f'\nEscógela escribiendo el número correspondiente, o "{len(poss)}" para tomar una nueva carta.')
 def mesa():
     print(separ,'{0:^40}'.format(comentario),sep='\n')
     cartasopp()
@@ -235,38 +250,56 @@ def puntaje():
         print(f'Ronda {i+1}:  ','{0:^6}'.format(us.puntaje[i]),'{0:^15}'.format(op.puntaje[i]))
     
 #turnos
-def turnoop():                  #turno oponente+imprime mesa
+def turnoop():                  #turno oponente
     global cmesa
     global comentario
     global numjug
     if op.cartas>0:
-            posibs(op.nums,op.colrs)
-            if len(poss)>0:
-                numjug = random.randrange(0,len(poss))
-                n_c_jug = op.nums[poss[numjug]]
-                cmesa = oppjuega()
-                if n_c_jug==10 or n_c_jug==11 or n_c_jug==12 or n_c_jug==14:
-                    oppjuegadn()
-                    turnoop()
-                else: comentario = us.turno
-            else:
-                cmesa = oppjuega()
-def turnous():                  #turno jugador sin mesa
-    global cmesa
-    global numjug
-    if us.cartas>0:
-        try:
-            n_c_jug = us.nums[poss[numjug]]
-        except IndexError:
-            cmesa = jugada()
-        else:
+        posibs(op)
+        if len(poss)>0:
+            numjug = random.randrange(0,len(poss))
+            n_c_jug = op.nums[poss[numjug]]
+            cmesa = oppjuega()
             if n_c_jug==10 or n_c_jug==11 or n_c_jug==12 or n_c_jug==14:
-                juegadenuevo()
-                if us.cartas>0:
-                    misposibs()
-                    numjug = int(input())
-                    turnous()
-            else:   cmesa = jugada()
+                oppjuegadn()
+                turnoop()
+            else: comentario = us.turno
+        else:
+            cmesa = oppjuega()
+def turnous():                  #turno jugador
+    global cmesa
+    global comentario
+    global numjug
+    global poss
+    try:
+        n_c_jug = us.nums[poss[numjug]]
+    except IndexError:
+        cmesa = jugada()
+        if us.nums[-1]==cmesa[0] or us.colrs[-1]==cmesa[1] or us.colrs[-1]==0:
+            comentario = op.turno
+            poss = [len(us.nums)-1,1]
+            print(f'Tu nueva carta es un {fcarta(us.nums[-1],us.colrs[-1])}, puedes jugarla escribiendo "0", o "1" para quedártela y pasar tu turno.')
+            numjug = int(input())
+            if numjug == 0:
+                n_c_jug = us.nums[poss[numjug]]
+                comentario = f'{us.nc} y la descartaste. {op.turno}'
+                if n_c_jug==10 or n_c_jug==11 or n_c_jug==12 or n_c_jug==14:
+                    juegadenuevo()
+                    if us.cartas>0:
+                        misposibs()
+                        numjug = int(input())
+                        turnous()
+                else: cmesa = jugada()
+            else:
+                comentario = f'{us.nc} y decidiste pasar tu turno. {op.turno}'
+    else:
+        if n_c_jug==10 or n_c_jug==11 or n_c_jug==12 or n_c_jug==14:
+            juegadenuevo()
+            if us.cartas>0:
+                misposibs()
+                numjug = int(input())
+                turnous()
+        else:   cmesa = jugada()
 
 
 while ingame:
@@ -297,7 +330,7 @@ while ingame:
                                 mcors.append(i)
                     reparto()
                     pricartamesa()
-                    if mano%2==0:
+                    if mano%2==0:                           #1er turno
                         comentario = us.empieza
                         if cmesa[0]==13:
                             comentario += f' {pc_accion} Comodín, juegas el primer color que quieras.'
@@ -307,7 +340,7 @@ while ingame:
                             print('Estas son tus cartas que puedes jugar:')
                             for i in range(len(poss)):
                                 print(f'{i}.',fcarta(us.nums[poss[i]],us.colrs[poss[i]]),end=' ')
-                            print(f'\nEscógela escribiendo el número correspondiente, o "{len(poss)}" para tomar una nueva carta y pasar esta ronda.')
+                            print(f'\nEscógela escribiendo el número correspondiente, o "{len(poss)}" para tomar una nueva carta.')
                         elif cmesa[0]>9:
                             comentario = f'{pc_accion} {simb(cmesa[0])}, '
                             match cmesa[0]:
@@ -368,23 +401,22 @@ while ingame:
                         turnous()
                         if us.cartas==0: break
                         mesa()
-                        turnoop()                       #turno oponente
+                        turnoop()
                         if op.cartas!=0:
                             mesa()
                             misposibs()
+
                     if cmesa[0]==12 or cmesa[0]==14:
                         if us.cartas<op.cartas:
                             comentario = f'Le sumaste {cmesa[0]-10} cartas a tu oponente.'
                         else:
                             comentario = f'Tu oponente te sumó {cmesa[0]-10} cartas.'
                     mesa()
-                    if us.cartas<op.cartas:
-                        print('Felicidades, ganaste.')
-                    else:
-                        print('aprendé a jugar')
+                    print('Felicidades, ganaste.') if us.cartas<op.cartas else print('aprendé a jugar')
                     mano += 1
                     rondas += 1
                     sumarpuntos()
+
                     while True:
                         print('\nSelecciona: ')
                         for i in range(4):
