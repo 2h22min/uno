@@ -1,0 +1,58 @@
+Objetivo del juego:
+
+Ser el primer jugador en alcanzar 500 puntos. Acumula puntos deshaciéndote de las cartas de tu mano antes que tus oponentes. (Leer sección Puntos para más información)
+
+
+Cómo se juega:
+
+Cuando sea tu turno, haz coincidir una de tus cartas con la carta en la mesa, ya sea, por número, color o símbolo (los símbolos representan cartas de acción).
+Si no tienes ninguna carta que coincida, tienes que robar una carta del mazo. Si robas una carta que puedes jugar, puedes jugarla. Sino, le toca al siguiente jugador.
+Puedes optar por no jugar una carta que puedas utilizar. Si decides hacer eso, tienes que robar una carta del mazo, y luego ya no podrás jugar una carta de tu mano que no sea la nueva.
+
+Cuando un jugador descarta todas sus cartas, se acaba la ronda y la gana. Los puntos se suman y empieza la próxima ronda. Si la útima carta del ganador fue una carta +2 o un Comodín +4, el siguiente jugador deberá robar las cartas correspondientes, ya que éstas contarán para los puntos del ganador.
+
+
+Inicio de ronda:
+
+Normalmente el jugador a la izquierda del repartidor empieza. (Ver sección Cartas de acción)
+
+
+Cartas de acción:
+
++2:
+Cuando se tira esta carta, el siguiente jugador roba dos cartas del mazo y pierde su turno.
+Si ésta es la primera carta volteada de la ronda, se aplica la misma regla de juego al jugador a la izquierda del repartidor.
+
+Reversa:
+Cambia el sentido del juego. Si sólo hay 2 jugadores como en este caso, quien la juega gana un turno adicional.
+Si ésta es la primera carta volteada de la ronda, al repartidor le toca primero y el juego continúa en sentido contrarreloj.
+
+Skip:
+Cuando se tira esta carta, el siguiente jugador pierde su turno y jugará el que le sigue de acuerdo al sentido del juego.
+Si ésta es la primera carta volteada de la ronda, se "salta" al jugador a la izquierda del repartidor y empieza el siguiente jugador.
+
+Comodín:
+El jugador que descarte esta carta debe decir el nuevo color que se jugará o puede repetir el anterior para descartarse. Esta carta se puede tirar sobre cualquier carta; incluso, puede ser utilizada en caso de tener alguna carta con el número o color correspondiente.
+Si ésta es la primera carta volteada de la ronda, el jugador a la izquierda del repartidor decide el color con el que empezará el juego.
+
+Comodín +4:
+Quien tira esta carta escoge el nuevo color y hace que el siguiente jugador robe 4 cartas del mazo y pierda su turno. Esta carta sólo se puede descartar si el jugador que la tiene NO tiene otra carta en su mano que coincida en COLOR con la carta en mesa (Sin embargo, sí puede descartarla si tiene en su mano cartas que coincidan con la carta en mesa en número o símbolo).
+Ésta no puede ser la primera carta volteada de la ronda.
+
+NOTA: si sospechas que un jugador descartó un Comodín +4 ilegalmente (esto es, teniendo alguna carta del color que corresponda), puedes desafiarlo. El desafiado deberá ense?arle sus cartas al desafiante y: si es culpable, el desafiado deberá robar las 4 cartas en su lugar; si es inocente, el desafiante deberá robar las 4 cartas ADEMÁS de 2 cartas adicionales (6 en total).
+
+
+Puntos:
+
+Cuando un jugador gana una ronda (ver sección Cómo se juega), suma puntos según las cartas que los oponentes no pudieron descartar. La puntuación será como sigue:
+Todas las cartas con número (0-9) -> Valor del número
++2 --------------------------------> 20 puntos
+Reversa ---------------------------> 20 puntos
+Skip ------------------------------> 20 puntos
+Comodín ---------------------------> 50 puntos
+Comodín +4 ------------------------> 50 puntos
+
+
+Fuentes:
+
+https://service.mattel.com/instruction_sheets/UNO%20Basic%20IS.pdf; https://en.wikipedia.org/wiki/Uno_(card_game)
